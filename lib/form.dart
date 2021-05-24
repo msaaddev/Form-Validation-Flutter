@@ -60,11 +60,17 @@ class _FormWidgetState extends State<FormWidget> {
                         });
                       },
                       validator: (value) {
-                        return (value == null ||
-                                value.isEmpty ||
-                                !value.toString().contains('@'))
-                            ? 'Please enter a valid email'
-                            : null;
+                        RegExp regExp = new RegExp(
+                            r'^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$');
+
+                        print('hello');
+                        print(regExp.hasMatch(value.toString()));
+
+                        if (!regExp.hasMatch(value.toString())) {
+                          return 'Please enter a valid email';
+                        }
+
+                        return null;
                       },
                       decoration: InputDecoration(
                         labelText: 'Email ID',
