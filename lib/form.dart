@@ -10,6 +10,8 @@ class _FormWidgetState extends State<FormWidget> {
   String email = '';
   String number = '';
   String password = '';
+  String msg = '';
+  bool isChecked = false;
 
   final key = GlobalKey<FormState>();
   @override
@@ -27,7 +29,15 @@ class _FormWidgetState extends State<FormWidget> {
                   ListTile(
                     title: TextFormField(
                       onSaved: (value) {
-                        username = value;
+                        setState(() {
+                          username = value.toString();
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                        return null;
                       },
                       decoration: InputDecoration(
                         labelText: 'User Name',
@@ -45,7 +55,16 @@ class _FormWidgetState extends State<FormWidget> {
                   ListTile(
                     title: TextFormField(
                       onSaved: (value) {
-                        email = value;
+                        setState(() {
+                          email = value.toString();
+                        });
+                      },
+                      validator: (value) {
+                        return (value == null ||
+                                value.isEmpty ||
+                                !value.toString().contains('@'))
+                            ? 'Please enter a valid email'
+                            : null;
                       },
                       decoration: InputDecoration(
                         labelText: 'Email ID',
@@ -63,7 +82,22 @@ class _FormWidgetState extends State<FormWidget> {
                   ListTile(
                     title: TextFormField(
                       onSaved: (value) {
-                        number = value;
+                        setState(() {
+                          number = value.toString();
+                        });
+                      },
+                      validator: (value) {
+                        int len = value.toString().length;
+                        if (len > 11 || len < 11) {
+                          return 'Total allowed digits for number is 11';
+                        } else {
+                          RegExp regExp = new RegExp(r'(\d{11})');
+
+                          if (!regExp.hasMatch(value.toString())) {
+                            return 'Only numbers are allowed';
+                          }
+                        }
+                        return null;
                       },
                       decoration: InputDecoration(
                         labelText: 'Mobile No',
@@ -81,7 +115,22 @@ class _FormWidgetState extends State<FormWidget> {
                   ListTile(
                     title: TextFormField(
                       onSaved: (value) {
-                        password = value;
+                        setState(() {
+                          password = value.toString();
+                        });
+                      },
+                      validator: (value) {
+                        int len = value.toString().length;
+                        if (len < 5) {
+                          return 'Password length must be greater than 5.';
+                        } else {
+                          RegExp regExp = new RegExp(r'^[a-zA-Z0-9]+$');
+
+                          if (!regExp.hasMatch(value.toString())) {
+                            return 'Password must only contain alphabets and numbers';
+                          }
+                        }
+                        return null;
                       },
                       decoration: InputDecoration(
                         labelText: 'Password',
@@ -115,10 +164,54 @@ class _FormWidgetState extends State<FormWidget> {
                             borderRadius: BorderRadius.circular(35.0),
                           )),
                       onPressed: () {
-                        this.key.currentState.save();
+                        if (!isChecked) {
+                          setState(() {
+                            msg = 'Kindly accept the terms to continue.';
+                          });
+                        } else {
+                          if (key.currentState!.validate()) {
+                            key.currentState!.save();
+                          }
+                        }
                       },
                     ),
-                  ))
+                  )),
+                  ListTile(
+                    title: Row(
+                      children: [
+                        Checkbox(
+                          checkColor: Colors.white,
+                          value: isChecked,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              msg = '';
+
+                              isChecked = value!;
+                            });
+                          },
+                        ),
+                        RichText(
+                          text: TextSpan(
+                            text: 'I accept the ',
+                            style: TextStyle(color: Colors.black),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: 'Terms & Conditions',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Text(msg != '' ? '$msg' : '',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.red)),
                 ],
               ))),
     );
