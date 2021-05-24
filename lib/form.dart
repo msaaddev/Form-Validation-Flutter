@@ -18,14 +18,42 @@ class _FormWidgetState extends State<FormWidget> {
   Widget build(BuildContext context) {
     return Container(
       child: SingleChildScrollView(
-          child: Form(
+          child: Column(
+        children: [
+          Container(
+              alignment: Alignment.topLeft,
+              margin: EdgeInsets.only(top: 60, left: 20),
+              child: Icon(Icons.arrow_back)),
+          Container(
+            alignment: Alignment.topLeft,
+            margin: EdgeInsets.only(top: 10, left: 20),
+            child: Column(
+              children: [
+                Text("Register",
+                    style: TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.w800,
+                    ))
+              ],
+            ),
+          ),
+          Container(
+            alignment: Alignment.topLeft,
+            margin: EdgeInsets.only(top: 10, bottom: 20, left: 20),
+            child: Column(
+              children: [
+                Text("Sign up to experience new ways",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.grey[600]))
+              ],
+            ),
+          ),
+          Form(
               key: key,
               child: Column(
                 children: [
-                  Container(
-                    margin: EdgeInsets.only(top: 20),
-                    child: null,
-                  ),
                   ListTile(
                     title: TextFormField(
                       onSaved: (value) {
@@ -219,7 +247,9 @@ class _FormWidgetState extends State<FormWidget> {
                           fontWeight: FontWeight.w500,
                           color: Colors.red)),
                 ],
-              ))),
+              ))
+        ],
+      )),
     );
   }
 }
